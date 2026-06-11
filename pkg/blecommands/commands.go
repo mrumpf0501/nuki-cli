@@ -731,12 +731,14 @@ func (c *KeyturnerStates) FromMessage(b []byte) error {
 	c.DoorSensorState = DoorSensorState(b[18])
 	c.NightmodeActive = byteToBool(b[19])
 	c.AccessoryBatteryState = newAccessoryStatus(b[20])
+	/*
 	c.RemoteAccessStatus = newRemoteAccessStatus(b[21])
 	c.BleConnectionStrength = newConnectionStrength(b[22])
 	c.WifiConnectionStrength = newConnectionStrength(b[23])
 	c.WifiConnectionStatus = newWifiConnectionStatus(b[24])
 	c.MqttConnectionStatus = newMqttConnectionStatus(b[25])
 	c.ThreadConnectionStatus = newThreadConnectionStatus(b[26])
+	*/
 	return nil
 }
 func (c *KeyturnerStates) GetPayload() []byte {
@@ -782,7 +784,7 @@ func (c *Config) GetTimezoneLocation() *time.Location {
 	return tz
 }
 func (c *Config) FromMessage(b []byte) error {
-	if len(b) < 76 {
+	if len(b) < 72 {
 		return fmt.Errorf("invalid Config message length")
 	}
 
@@ -804,7 +806,7 @@ func (c *Config) FromMessage(b []byte) error {
 	minute := int(b[54])
 	second := int(b[55])
 
-	c.TimezoneID = binary.LittleEndian.Uint16(b[72:74])
+	// c.TimezoneID = binary.LittleEndian.Uint16(b[72:74])
 	tz := c.GetTimezoneLocation()
 	c.CurrentTime = time.Date(year, time.Month(month), day, hour, minute, second, 0, tz)
 
@@ -822,6 +824,7 @@ func (c *Config) FromMessage(b []byte) error {
 	c.HardwareRevision = fmt.Sprintf("%d.%d", b[69], b[70])
 
 	c.HomeKitStatus = b[71]
+	/*
 	// timezoneID is set above, next to the current time
 	c.DeviceType = b[74]
 	c.Capabilities = b[75]
@@ -831,6 +834,7 @@ func (c *Config) FromMessage(b []byte) error {
 	if len(b) > 77 { // MatterStatus is optional? TODO: verify
 		c.MatterStatus = b[77]
 	}
+	*/
 	return nil
 }
 
